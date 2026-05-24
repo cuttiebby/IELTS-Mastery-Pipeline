@@ -37,11 +37,15 @@ jobs:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         run: python daily_generator.py
 
-      - name: Commit and push changes
-        uses: stefanzwl/setup-git-auto-commit@v2
-        with:
-          commit_message: "docs(Article): add daily article – ${{ steps.date.outputs.date }}"
-          add_directory: "Learning English/Article"
-          skip_dirty_check: false
-        env:
-          API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit and push article
+        run: |
+          cd "Learning English/Article" || exit 0
+          latest=$(ls -t *.md 2>/dev/null | head -1)
+          if [[ -n "$latest" ]]; then
+            cd "$GITHUB_WORKSPACE"
+            git config user.name "布谷"
+            git config user.email "orangle220@gmail.com"
+            git add "Learning English/Article/"
+            git diff --staged --quiet || git commit -m "docs(Article): add daily article – $(date +%Y-%m-%d)"
+            git push
+          fi

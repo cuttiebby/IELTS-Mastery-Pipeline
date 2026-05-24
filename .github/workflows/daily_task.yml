@@ -39,13 +39,13 @@ jobs:
 
       - name: Commit and push article
         run: |
-          cd "Learning English/Article" || exit 0
+          cd "$GITHUB_WORKSPACE/Learning English/Article" || exit 0
           latest=$(ls -t *.md 2>/dev/null | head -1)
           if [[ -n "$latest" ]]; then
             cd "$GITHUB_WORKSPACE"
             git config user.name "布谷"
             git config user.email "orangle220@gmail.com"
             git add "Learning English/Article/"
-            git diff --staged --quiet || git commit -m "docs(Article): add daily article – $(date +%Y-%m-%d)"
+            git diff --staged --quiet || git commit -m "docs(Article): add daily article $(date +%Y-%m-%d)"
             git push
           fi
